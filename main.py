@@ -199,6 +199,18 @@ def add_header(response):
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "-1"
+
+    # Add Content Security Policy
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "  # Only allow content from the same origin
+        "script-src 'self' 'unsafe-inline'; "  # Allow inline scripts (if necessary)
+        "style-src 'self' 'unsafe-inline'; "  # Allow inline styles (if necessary)
+        "img-src 'self' data:; "  # Allow images from the same origin and data URIs
+        "font-src 'self'; "  # Allow fonts from the same origin
+        "connect-src 'self'; "  # Allow AJAX requests to the same origin
+        "frame-src 'none'; "  # Disallow embedding in iframes
+        "object-src 'none';"  # Disallow plugins like Flash
+    )
     return response
 
 @app.errorhandler(429)
