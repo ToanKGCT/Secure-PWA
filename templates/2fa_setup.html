@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Set Up Two-Factor Authentication</h1>
+<p>Scan the QR code below with your Google Authenticator app:</p>
+<div class="qr-container">
+    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="qr-code">
+</div>
+<form method="POST" class="otp-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="otp">Enter the 6-digit code from your app:</label>
+    <input type="text" id="otp" name="otp" required>
+    <button type="submit">Verify</button>
+</form>
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+{% endblock %}

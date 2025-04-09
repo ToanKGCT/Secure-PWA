@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Signup Form</h1>
+<form action="/signup.html" method="POST" class="box">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="input__wrapper">
+        <input type="email" name="email" id="email" placeholder="Email" class="input__field" value="{{ email | default('') }}" required/>
+    </div>
+    <div class="input__wrapper">
+        <input type="text" name="username" id="username" placeholder="Username" class="input__field" value="{{ username | default('') }}" required>
+        <div id="username-error" style="color: red; font-size: 0.9em; display: none;">
+            Username must be more than 6 characters.
+        </div>
+    </div>            
+    <div class="input__wrapper">
+        <input type="password" name="password" id="password" placeholder="Password" class="input__field" required>
+        <div id="password-error" style="color: red; font-size: 0.9em; display: none;">
+            Password must be 12-32 characters long, contain at least 1 uppercase letter, 1 lowercase letter, and more than 4 numbers.
+        </div>
+    </div>
+    <div class="input__wrapper">
+        <input type="text" name="dob" id="dob" placeholder="DD/MM/YYYY" class="input__field" maxlength="10" value="{{ dob | default('') }}" required>
+        <div id="dob-error" style="color: red; font-size: 0.9em; display: none;">
+            Date of Birth must be in DD/MM/YYYY format.
+        </div>
+    </div>
+    <div id="signup-error" style="color: red; font-size: 0.9em; text-align: center;">
+        {% if error %}
+            {{ error }}
+        {% endif %}
+    </div>
+    <div class="input__wrapper">
+        <button type="submit" class="btn">Submit</button>
+    </div>
+</form>
+
+
+<script>
+    // Username validation
+    const usernameInput = document.getElementById("username");
+    const usernameError = document.getElementById("username-error");
+
+    usernameInput.addEventListener("input", function () {
+        if (usernameInput.value.length <= 6) {
+            usernameError.style.display = "block"; // Show the error message
+        } else {
+            usernameError.style.display = "none"; // Hide the error message
+        }
+    });
+
+    // Password validation
+    const passwordInput = document.getElementById("password");
+    const passwordError = document.getElementById("password-error");
+
+    passwordInput.addEventListener("input", function () {
+        const password = passwordInput.value;
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d.*\d.*\d.*\d)[A-Za-z\d]{12,32}$/;
+
+        if (!regex.test(password)) {
+            passwordError.style.display = "block"; // Show the error message
+        } else {
+            passwordError.style.display = "none"; // Hide the error message
+        }
+    });
+
+    // Date of Birth validation
+    const dobInput = document.getElementById("dob");
+    const dobError = document.getElementById("dob-error");
+
+    dobInput.addEventListener("input", function (e) {
+        let value = dobInput.value.replace(/\D/g, ''); // Remove non-numeric characters
+        if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+        if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5);
+        dobInput.value = value.slice(0, 10); // Limit to 10 characters (DD/MM/YYYY)
+    });
+
+    dobInput.addEventListener("blur", function () {
+        const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+        if (!regex.test(dobInput.value)) {
+            dobError.style.display = "block"; // Show the error message
+        } else {
+            dobError.style.display = "none"; // Hide the error message
+        }
+    });
+</script>
+
+{% endblock %}

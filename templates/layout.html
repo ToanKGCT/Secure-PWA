@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+   <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" type="text/css" href="static/css/style.css">
+        <title>The Unsecure PWA</title>
+        <link rel="manifest" href="static/manifest.json" />
+        <link rel="icon" type="image/x-icon" href="static/images/favicon.png" />
+        <meta name="theme-color" content="#14E6DD" />
+        <script src="static/js/modal.js"></script>
+        <style>
+            /* Modal styles */
+            .modal {
+                display: none; /* Hidden by default */
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.4); /* Black background with opacity */
+            }
+            .modal-content {
+                background-color: #fff;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 30%;
+                text-align: center;
+                border-radius: 8px;
+            }
+            .modal-buttons {
+                margin-top: 20px;
+            }
+            .modal-buttons button {
+                margin: 0 10px;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .btn-confirm {
+                background-color: #f44336;
+                color: white;
+            }
+            .btn-cancel {
+                background-color: #4caf50;
+                color: white;
+            }
+        </style>
+   </head>
+   <body>  
+    <main>
+        <nav>
+            <img src="static/images/logo.svg" alt="The unsecure website logo." />
+            <h1>The Unsecure PWA</h1>
+            <ul class="topnav">
+                {% if session.get('username') and session.get('2fa_verified') %}
+                    <li><a href="/success.html">Feedback</a></li>
+                    <li><a href="javascript:void(0);" onclick="showLogoutModal()">Logout</a></li>
+                {% elif session.get('username') %}
+                    <li><a href="javascript:void(0);" onclick="showLogoutModal()">Logout</a></li>
+                {% else %}
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/signup.html">Signup</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <div class="disclaimer">
+            <em>This progressive web app has been written specifically for students studying the 'Secure Software Architecture' unit. The application has been written with intentional vulnerabilities that students are to identify and implement solutions. Users should not use this as a template or enter any real data when interacting with the application.</em>
+        </div>
+
+        <!-- Logout Confirmation Modal -->
+        <div id="logout-modal" class="modal">
+            <div class="modal-content">
+                <p>Are you sure you want to log out?</p>
+                <div class="modal-buttons">
+                    <button class="btn-confirm" onclick="confirmLogout()">Yes</button>
+                    <button class="btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    {% block content %}{% endblock %}
+    </main>
+   </body>
+</html>
